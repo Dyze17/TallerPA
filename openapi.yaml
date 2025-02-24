@@ -20,7 +20,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
         '400':
-          description: Datos de entrada inválidos
+          description: Datos de entrada inválidoss
           content:
             application/json:
               schema:
@@ -45,6 +45,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
   /users/{id}/password:
     patch:
       summary: Actualizar la contraseña de un usuario
@@ -107,6 +108,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{id}:
+    get:
+      summary: Consultar un usuario por ID
+      operationId: getUserById
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Prohibido (sin permisos suficientes)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Servicio no disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   schemas:
     UserRegistration:
@@ -137,6 +189,7 @@ components:
         - fullName
         - email
         - password
+
     PasswordUpdate:
       type: object
       required:
@@ -151,6 +204,7 @@ components:
           minLength: 8
           pattern: "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).*$"
           description: "Nueva contraseña del usuario (debe contener al menos un dígito, una mayúscula y una minúscula)"
+
     SuccessResponse:
       type: object
       properties:
@@ -159,6 +213,7 @@ components:
           example: "Contraseña actualizada exitosamente"
       required:
         - message
+
     UserResponse:
       type: object
       properties:
@@ -178,6 +233,7 @@ components:
         - email
         - fullName
         - rol
+
     ErrorResponse:
       type: object
       properties:
@@ -188,6 +244,7 @@ components:
       required:
         - error
         - message
+
   securitySchemes:
     BearerAuth:
       type: http
