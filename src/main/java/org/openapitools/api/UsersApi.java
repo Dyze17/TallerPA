@@ -10,10 +10,9 @@ import org.openapitools.model.PasswordUpdate;
 import org.openapitools.model.SuccessResponse;
 import org.openapitools.model.UserRegistration;
 import org.openapitools.model.UserResponse;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import org.openapitools.model.UsersIdPutRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,16 +26,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-02-17T10:42:01.766670-05:00[America/Bogota]", comments = "Generator version: 7.7.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-02-24T09:59:15.841675-05:00[America/Bogota]", comments = "Generator version: 7.7.0")
 @Validated
 @Tag(name = "users", description = "the users API")
 public interface UsersApi {
@@ -46,11 +42,97 @@ public interface UsersApi {
     }
 
     /**
+     * GET /users/{id} : Consultar un usuario por ID
+     *
+     * @param id  (required)
+     * @return Usuario encontrado (status code 200)
+     *         or No autorizado (status code 401)
+     *         or Prohibido (sin permisos suficientes) (status code 403)
+     *         or Usuario no encontrado (status code 404)
+     *         or Error interno del servidor (status code 500)
+     *         or Servicio no disponible (status code 503)
+     */
+    @Operation(
+        operationId = "getUserById",
+        summary = "Consultar un usuario por ID",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "No autorizado", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Prohibido (sin permisos suficientes)", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "503", description = "Servicio no disponible", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "BearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/users/{id}",
+        produces = { "application/json" }
+    )
+    
+    default ResponseEntity<UserResponse> getUserById(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"fullName\" : \"fullName\", \"id\" : \"id\", \"dateBirth\" : \"2000-01-23\", \"email\" : \"email\", \"rol\" : \"rol\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"error\" : \"error\", \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"error\" : \"error\", \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"error\" : \"error\", \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"error\" : \"error\", \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"error\" : \"error\", \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
      * POST /users : Registrar un nuevo usuario
      *
      * @param userRegistration  (optional)
      * @return Usuario registrado exitosamente (status code 201)
-     *         or Datos de entrada inválidos (status code 400)
+     *         or Datos de entrada inválidoss (status code 400)
      *         or Correo ya registrado (status code 409)
      *         or Error interno del servidor (status code 500)
      *         or Servicio no disponible (status code 503)
@@ -62,7 +144,7 @@ public interface UsersApi {
             @ApiResponse(responseCode = "201", description = "Usuario registrado exitosamente", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))
             }),
-            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos", content = {
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidoss", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))
             }),
             @ApiResponse(responseCode = "409", description = "Correo ya registrado", content = {
@@ -213,6 +295,121 @@ public interface UsersApi {
                 }
             }
         });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * GET /users : Consultar múltiples usuarios con paginación
+     *
+     * @param page  (optional, default to 1)
+     * @param size  (optional, default to 10)
+     * @return Lista de usuarios recuperada exitosamente (status code 200)
+     *         or No autorizado (status code 401)
+     *         or Prohibido (status code 403)
+     *         or Error interno del servidor (status code 500)
+     *         or Servicio no disponible (status code 503)
+     */
+    @Operation(
+        operationId = "usersGet",
+        summary = "Consultar múltiples usuarios con paginación",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Lista de usuarios recuperada exitosamente"),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Prohibido"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor"),
+            @ApiResponse(responseCode = "503", description = "Servicio no disponible")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/users"
+    )
+    
+    default ResponseEntity<Void> usersGet(
+        @Parameter(name = "page", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @Parameter(name = "size", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "size", required = false, defaultValue = "10") Integer size
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * DELETE /users/{id} : Borrar un usuario
+     *
+     * @param id  (required)
+     * @return Usuario eliminado exitosamente (status code 200)
+     *         or No autorizado (status code 401)
+     *         or Prohibido (status code 403)
+     *         or Usuario no encontrado (status code 404)
+     *         or Error interno del servidor (status code 500)
+     *         or Servicio no disponible (status code 503)
+     */
+    @Operation(
+        operationId = "usersIdDelete",
+        summary = "Borrar un usuario",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Usuario eliminado exitosamente"),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Prohibido"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor"),
+            @ApiResponse(responseCode = "503", description = "Servicio no disponible")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/users/{id}"
+    )
+    
+    default ResponseEntity<Void> usersIdDelete(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /users/{id} : Actualizar un usuario
+     *
+     * @param id  (required)
+     * @param usersIdPutRequest  (required)
+     * @return Usuario actualizado exitosamente (status code 200)
+     *         or Solicitud incorrecta (status code 400)
+     *         or No autorizado (status code 401)
+     *         or Prohibido (status code 403)
+     *         or Usuario no encontrado (status code 404)
+     *         or Conflicto al actualizar el usuario (status code 409)
+     *         or Error interno del servidor (status code 500)
+     *         or Servicio no disponible (status code 503)
+     */
+    @Operation(
+        operationId = "usersIdPut",
+        summary = "Actualizar un usuario",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Usuario actualizado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Solicitud incorrecta"),
+            @ApiResponse(responseCode = "401", description = "No autorizado"),
+            @ApiResponse(responseCode = "403", description = "Prohibido"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+            @ApiResponse(responseCode = "409", description = "Conflicto al actualizar el usuario"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor"),
+            @ApiResponse(responseCode = "503", description = "Servicio no disponible")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/users/{id}",
+        consumes = { "application/json" }
+    )
+    
+    default ResponseEntity<Void> usersIdPut(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") String id,
+        @Parameter(name = "UsersIdPutRequest", description = "", required = true) @Valid @RequestBody UsersIdPutRequest usersIdPutRequest
+    ) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

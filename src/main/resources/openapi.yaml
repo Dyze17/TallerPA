@@ -6,6 +6,38 @@ servers:
 - url: /
 paths:
   /users:
+    get:
+      parameters:
+      - explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 10
+          type: integer
+        style: form
+      responses:
+        "200":
+          description: Lista de usuarios recuperada exitosamente
+        "401":
+          description: No autorizado
+        "403":
+          description: Prohibido
+        "500":
+          description: Error interno del servidor
+        "503":
+          description: Servicio no disponible
+      summary: Consultar múltiples usuarios con paginación
+      x-accepts:
+      - application/json
     post:
       operationId: registerUser
       requestBody:
@@ -27,7 +59,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/ErrorResponse'
                 type: array
-          description: Datos de entrada inválidos
+          description: Datos de entrada inválidoss
         "409":
           content:
             application/json:
@@ -114,6 +146,120 @@ paths:
       security:
       - BearerAuth: []
       summary: Actualizar la contraseña de un usuario
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /users/{id}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Usuario eliminado exitosamente
+        "401":
+          description: No autorizado
+        "403":
+          description: Prohibido
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+        "503":
+          description: Servicio no disponible
+      summary: Borrar un usuario
+      x-accepts:
+      - application/json
+    get:
+      operationId: getUserById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: Usuario encontrado
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: No autorizado
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Prohibido (sin permisos suficientes)
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Usuario no encontrado
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Error interno del servidor
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Servicio no disponible
+      security:
+      - BearerAuth: []
+      summary: Consultar un usuario por ID
+      x-accepts:
+      - application/json
+    put:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_users__id__put_request'
+        required: true
+      responses:
+        "200":
+          description: Usuario actualizado exitosamente
+        "400":
+          description: Solicitud incorrecta
+        "401":
+          description: No autorizado
+        "403":
+          description: Prohibido
+        "404":
+          description: Usuario no encontrado
+        "409":
+          description: Conflicto al actualizar el usuario
+        "500":
+          description: Error interno del servidor
+        "503":
+          description: Servicio no disponible
+      summary: Actualizar un usuario
       x-content-type: application/json
       x-accepts:
       - application/json
@@ -219,6 +365,14 @@ components:
       required:
       - error
       - message
+      type: object
+    _users__id__put_request:
+      properties:
+        name:
+          type: string
+        email:
+          format: email
+          type: string
       type: object
   securitySchemes:
     BearerAuth:

@@ -45,7 +45,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+    get:
+      summary: Consultar múltiples usuarios con paginación
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Lista de usuarios recuperada exitosamente
+        "401":
+          description: No autorizado
+        "403":
+          description: Prohibido
+        "500":
+          description: Error interno del servidor
+        "503":
+          description: Servicio no disponible
   /users/{id}/password:
     patch:
       summary: Actualizar la contraseña de un usuario
@@ -108,8 +133,65 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
   /users/{id}:
+    delete:
+      summary: Borrar un usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Usuario eliminado exitosamente
+        "401":
+          description: No autorizado
+        "403":
+          description: Prohibido
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+        "503":
+          description: Servicio no disponible
+    put:
+      summary: Actualizar un usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Usuario actualizado exitosamente
+        "400":
+          description: Solicitud incorrecta
+        "401":
+          description: No autorizado
+        "403":
+          description: Prohibido
+        "404":
+          description: Usuario no encontrado
+        "409":
+          description: Conflicto al actualizar el usuario
+        "500":
+          description: Error interno del servidor
+        "503":
+          description: Servicio no disponible
     get:
       summary: Consultar un usuario por ID
       operationId: getUserById
@@ -158,7 +240,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
 components:
   schemas:
     UserRegistration:
